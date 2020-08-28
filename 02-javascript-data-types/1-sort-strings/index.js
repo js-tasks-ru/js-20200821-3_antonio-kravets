@@ -6,4 +6,20 @@
  */
 export function sortStrings(arr, param = 'asc') {
 
+  let compareVal = -1;
+  const retVal = -1;
+  const copyArr = [...arr];
+
+  if (param === 'desc') {
+    compareVal = 1;
+  }
+
+  copyArr.sort((i, j) => {
+    if (i.localeCompare(j, 'ru', { usage: 'sort', caseFirst: 'upper' }) === compareVal) {
+      return retVal;
+    }
+  });
+
+  return copyArr;
 }
+
