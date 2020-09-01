@@ -5,20 +5,21 @@
  */
 export function createGetter(path) {
   const arr = path.split('.');
-  const key = arr[arr.length - 1];
+  const lastElement = arr[arr.length - 1];
 
   return function (obj) {
     let res;
-    iter(obj);
+    findObjectProperties(obj);
 
-    function iter(obj) {
+    function findObjectProperties(obj) {
       Object.entries(obj).forEach(([k, v]) => {
+
+        if (k === lastElement) {
+          res = v;
+          return;
+        }
         if (typeof obj[k] === 'object') {
-          iter(obj[k]);
-        } else {
-          if (k === key) {
-            res = v;
-          }
+          findObjectProperties(obj[k]);
         }
       });
     }
