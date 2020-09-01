@@ -5,4 +5,13 @@
  */
 export function invertObj(obj) {
 
+  if (obj) {
+    const map = new Map();
+    Object.entries(obj).forEach(([k, v]) => {
+      map.set(v, k);
+    });
+    return Object.fromEntries(map);
+  } else {
+    return undefined;
+  }
 }
