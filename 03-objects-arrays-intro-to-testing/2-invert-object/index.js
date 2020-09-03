@@ -5,4 +5,11 @@
  */
 export function invertObj(obj) {
 
+  if (obj) {
+    const newObj = {};
+    Object.entries(obj).forEach(([k, v]) => {
+      newObj[v] = k;
+    });
+    return newObj;
+  }
 }

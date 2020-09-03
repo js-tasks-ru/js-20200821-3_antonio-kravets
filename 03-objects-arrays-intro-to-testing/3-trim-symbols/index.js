@@ -6,4 +6,22 @@
  */
 export function trimSymbols(string, size) {
 
+  const arr = string.split('');
+  let newArr = [];
+  let idx = 0;
+  const res = [];
+  Object.entries(arr).forEach(([key, value]) => {
+    if (value !== string.charAt(+key + 1)) {
+      newArr = arr.slice(idx, +key + 1);
+      if (size === undefined) {
+        newArr.length;
+      } else {
+        newArr.length = size;
+      }
+      idx = +key + 1;
+      newArr.forEach(e => res.push(e));
+    }
+  });
+  return res.join('');
+
 }
