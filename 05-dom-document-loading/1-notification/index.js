@@ -1,57 +1,65 @@
 export default class NotificationMessage {
-  static timer = 0;
-  element;
+  static activeNotification;
 
-  constructor(message, {duration, type = ''} = {}) {
+  constructor(message, {
+    duration = 2000,
+    type = 'success',
+  } = {}) {
+
+    if (NotificationMessage.activeNotification) {
+      NotificationMessage.activeNotification.remove();
+    }
+
     this.message = message;
-    this.duration = duration;
+    this.durationInSeconds = (duration / 1000) + 's';
     this.type = type;
+    this.duration = duration;
 
     this.render();
-
   }
 
-  getTemplate() {
-    return `
-<div class="notification ${this.type}" style="--value:${this.duration / 1000}s">
-<div class="timer"></div>
-<div class="inner-wrapper">
-      <div class="notification-header">${this.type}</div>
-      <div class="notification-body">${this.message}</div>
-</div>
-</div>
-   `;
+  get template() {
+    return `<div class="notification ${this.type}" style="--value:${this.durationInSeconds}">
+      <div class="timer"></div>
+      <div class="inner-wrapper">
+        <div class="notification-header">Notification</div>
+        <div class="notification-body">
+          ${this.message}
+        </div>
+      </div>
+    </div>`;
   }
-
 
   render() {
-    const elem = document.createElement('div');
-    elem.innerHTML = this.getTemplate();
-    this.element = elem.firstElementChild;
-    if (NotificationMessage.timer === 0) {
-      document.body.append(this.element);
-    }
+    const element = document.createElement('div');
+
+    element.innerHTML = this.template;
+
+    this.element = element.firstElementChild;
+
+    NotificationMessage.activeNotification = this.element;
   }
 
-  show(element) {
-    if (element) {
-      this.element = element;
-    }
-    this.startTimer(this.duration);
-  }
+  show(parent) {
+    const root = parent || document.body;
 
-  startTimer(duration) {
+    root.append(this.element);
+
     setTimeout(() => {
       this.remove();
-    }, duration, NotificationMessage.timer = 1);
+    }, this.duration);
+
+    return this.element;
   }
 
   remove() {
     this.element.remove();
-    NotificationMessage.timer = 0;
   }
 
   destroy() {
     this.remove();
+    NotificationMessage.activeNotification = null;
   }
 }
+
+
